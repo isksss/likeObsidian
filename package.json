@@ -1,0 +1,166 @@
+{
+  "name": "like-obsidian",
+  "displayName": "Like Obsidian",
+  "description": "Use an Obsidian-compatible vault from VS Code.",
+  "version": "0.0.1",
+  "publisher": "isksss",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:obsidianVault.search",
+    "onCommand:obsidianVault.readNote",
+    "onCommand:obsidianVault.listNotes"
+  ],
+  "main": "./dist/extension.js",
+  "bin": {
+    "like-obsidian-mcp": "./dist/mcp/server.js"
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "test": "vitest run",
+    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "@types/vscode": "^1.90.0",
+    "typescript": "^5.4.5",
+    "vitest": "^4.1.6"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "likeObsidian.openVault",
+        "title": "Obsidian: Open Vault"
+      },
+      {
+        "command": "likeObsidian.createNote",
+        "title": "Obsidian: Create Note"
+      },
+      {
+        "command": "likeObsidian.createDailyNote",
+        "title": "Obsidian: Create Daily Note"
+      },
+      {
+        "command": "likeObsidian.refreshVault",
+        "title": "Obsidian: Refresh Vault"
+      },
+      {
+        "command": "likeObsidian.newNoteInFolder",
+        "title": "New Note"
+      },
+      {
+        "command": "likeObsidian.newFolder",
+        "title": "New Folder"
+      },
+      {
+        "command": "likeObsidian.rename",
+        "title": "Rename"
+      },
+      {
+        "command": "likeObsidian.delete",
+        "title": "Delete"
+      },
+      {
+        "command": "likeObsidian.revealInExplorer",
+        "title": "Reveal in Explorer"
+      }
+    ],
+    "configuration": {
+      "title": "Like Obsidian",
+      "properties": {
+        "obsidianVault.path": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to the Obsidian vault. Uses the first workspace folder when empty."
+        },
+        "obsidianVault.defaultFolder": {
+          "type": "string",
+          "default": "",
+          "description": "Default folder for new notes. Falls back to Inbox, Notes, then vault root."
+        },
+        "obsidianVault.ai.allowedFolders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Folders AI commands may access. Empty allows all non-denied folders."
+        },
+        "obsidianVault.ai.deniedFolders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "Secrets",
+            "Private"
+          ],
+          "description": "Folders AI commands may not access."
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "likeObsidian",
+          "title": "Obsidian",
+          "icon": "media/obsidian.svg"
+        }
+      ]
+    },
+    "views": {
+      "likeObsidian": [
+        {
+          "id": "likeObsidian.vaultExplorer",
+          "name": "Vault"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "likeObsidian.refreshVault",
+          "when": "view == likeObsidian.vaultExplorer",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "likeObsidian.newNoteInFolder",
+          "when": "view == likeObsidian.vaultExplorer && viewItem == folder",
+          "group": "inline"
+        },
+        {
+          "command": "likeObsidian.newFolder",
+          "when": "view == likeObsidian.vaultExplorer && viewItem == folder",
+          "group": "inline"
+        },
+        {
+          "command": "likeObsidian.revealInExplorer",
+          "when": "view == likeObsidian.vaultExplorer && viewItem == note",
+          "group": "navigation"
+        },
+        {
+          "command": "likeObsidian.rename",
+          "when": "view == likeObsidian.vaultExplorer",
+          "group": "2_modify"
+        },
+        {
+          "command": "likeObsidian.delete",
+          "when": "view == likeObsidian.vaultExplorer",
+          "group": "2_modify"
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.4.3"
+  }
+}
